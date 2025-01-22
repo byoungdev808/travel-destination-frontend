@@ -10,8 +10,9 @@ export default function Home() {
   const [destinations, setDestinations] = useState([]);
   const [name, setName] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
 
-  // Fetch destinations from the backend
+
   useEffect(() => {
     fetchDestinations();
   }, []);
@@ -22,39 +23,39 @@ export default function Home() {
     setDestinations(data);
   }
 
-  // Handle create and update
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (editingId) {
-      // Update existing destination
-      await fetch(`${BACKEND_URL}/destinations/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
-    } else {
-      // Create a new destination
-      await fetch(`${BACKEND_URL}/destinations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
-    }
+    if (name.trim() === "") return;
+
+    await fetch(`${BACKEND_URL}/destinations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
     setName("");
-    setEditingId(null);
     fetchDestinations();
   }
 
-  // Handle delete
+  async function handleSave(id: string, updatedName: string) {
+    if (updatedName.trim() === "") return;
+
+    await fetch(`${BACKEND_URL}/destinations/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: updatedName }),
+    });
+    setEditingId(null)
+    fetchDestinations();
+  }
+
+  function handleEdit(destination: any) {
+    setEditingId(destination.id);
+    setEditingValue(destination.name);
+  }
+
   async function handleDelete(id: string) {
     await fetch(`${BACKEND_URL}/destinations/${id}`, { method: "DELETE" });
     fetchDestinations();
-  }
-
-  // Handle edit
-  function handleEdit(destination: any) {
-    setName(destination.name);
-    setEditingId(destination.id);
   }
 
   return (
@@ -62,7 +63,7 @@ export default function Home() {
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Manage Destinations</h1>
 
-        {/* Form for Create and Update */}
+        {/* Form for Adding New Destination */}
         <form onSubmit={handleSubmit} className="mb-6">
           <Input
             type="text"
@@ -72,8 +73,8 @@ export default function Home() {
             className="mb-2"
             required
           />
-          <Button type="submit" variant={editingId ? "secondary" : "default"}>
-            {editingId ? "Update Destination" : "Add Destination"}
+          <Button type="submit" variant="default">
+            Add Destination
           </Button>
         </form>
 
@@ -83,18 +84,36 @@ export default function Home() {
             <Card key={dest.id}>
               <CardHeader>
                 <CardTitle>
-                  <Link href={`/knowledgebase/${dest.id}`}>
-                    {/* Navigate to KnowledgeBase page */}
-                    {dest.name}
-                  </Link>
+                  {editingId === dest.id ? (
+                    <Input
+                      type="text"
+                      value={editingValue}
+                      onChange={(e) => setEditingValue(e.target.value)}
+                      onBlur={() => handleSave(dest.id, editingValue)} // Save on blur
+                      autoFocus
+                      className="border border-gray-300 p-2 rounded"
+                    />
+                  ) : (
+                    <Link href={`/knowledgebase/${dest.id}`}>
+                      <span className="underline">{dest.name}</span>
+                    </Link>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex justify-between items-center">
                 <div className="flex space-x-2">
-                  <Button variant="secondary" onClick={() => handleEdit(dest)}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleEdit(dest)}
+                    disabled={editingId === dest.id}
+                  >
                     Edit
                   </Button>
-                  <Button variant="destructive" onClick={() => handleDelete(dest.id)}>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDelete(dest.id)}
+                    disabled={editingId === dest.id}
+                  >
                     Delete
                   </Button>
                 </div>

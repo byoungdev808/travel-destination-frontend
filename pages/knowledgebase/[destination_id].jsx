@@ -17,7 +17,6 @@ export default function KnowledgeBasePage() {
 	const [editingKB, setEditingKB] = useState(null);
 	const [content, setContent] = useState("");
 
-	// Fetch knowledge bases for the destination
 	useEffect(() => {
 		if (destination_id) {
 			fetchDestination();
@@ -68,7 +67,7 @@ export default function KnowledgeBasePage() {
 	};
 
 	if (!destination_id) {
-		return <p>Loading...</p>; // Show a loading message until the destination_id is available
+		return <p>Loading...</p>;
 	}
 
 	return (
@@ -92,6 +91,7 @@ export default function KnowledgeBasePage() {
 							onChange={(e) => setContent(e.target.value)}
 							placeholder="Enter content"
 							className="mb-4"
+							rows="10"
 						/>
 						<div className="flex justify-end space-x-2">
 							<Button variant="secondary" onClick={() => setIsDialogOpen(false)}>

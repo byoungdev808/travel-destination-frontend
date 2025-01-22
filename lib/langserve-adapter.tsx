@@ -83,8 +83,7 @@ export function toDataStream(
                     args: tool_call.args,
                   });
                 }
-                // console.log('on_chat_model_end')
-                // console.log(value)
+
                 controller.enqueue({
                   type: 'text',
                   content: value.data.output.content,
@@ -101,15 +100,6 @@ export function toDataStream(
           },
         })
       )
-      // .pipeThrough(createCallbacksTransformer(callbacks))
-      // .pipeThrough(
-      //   new TransformStream({
-      //     transform: async (chunk, controller) => {
-      //       console.log('Before final transformer:', chunk);
-      //       controller.enqueue(chunk);
-      //     },
-      //   })
-      // )
       .pipeThrough(createLangServeAdapterStreamDataTransformer())
   );
 }
@@ -146,10 +136,6 @@ export function createLangServeAdapterStreamDataTransformer() {
   const decoder = new TextDecoder();
   return new TransformStream({
     transform: async (chunk, controller) => {
-      // console.log('Final transformer received:', chunk);
-      // console.log('Chunk type:', typeof chunk);
-      // console.log('Chunk properties:', Object.keys(chunk));
-
       // Try to handle both string and object cases
       let parsedChunk;
       if (typeof chunk === 'string') {
