@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,7 @@ export default function Home() {
   }
 
   // Handle create and update
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (editingId) {
       // Update existing destination
@@ -46,13 +46,13 @@ export default function Home() {
   }
 
   // Handle delete
-  async function handleDelete(id) {
+  async function handleDelete(id: string) {
     await fetch(`${BACKEND_URL}/destinations/${id}`, { method: "DELETE" });
     fetchDestinations();
   }
 
   // Handle edit
-  function handleEdit(destination) {
+  function handleEdit(destination: any) {
     setName(destination.name);
     setEditingId(destination.id);
   }
@@ -79,7 +79,7 @@ export default function Home() {
 
         {/* List of Destinations */}
         <div className="grid grid-cols-1 gap-4">
-          {destinations.map((dest) => (
+          {destinations.map((dest: any) => (
             <Card key={dest.id}>
               <CardHeader>
                 <CardTitle>

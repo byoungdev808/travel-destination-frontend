@@ -21,7 +21,7 @@ function parseLangServeStream(): AIStreamParser {
   };
 }
 
-export function LangServeStream(
+function LangServeStream(
   res: Response,
   cb?: AIStreamCallbacksAndOptions,
 ): ReadableStream {
