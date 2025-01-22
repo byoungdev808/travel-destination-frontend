@@ -1,25 +1,17 @@
-This is the [assistant-ui](https://github.com/Yonom/assistant-ui) starter project.
+# Travel Destination App - Frontend
 
-## Getting Started
+## Install
 
-First, add your OpenAI API key to `.env.local` file:
+### 1. Add env var
 
-```
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+- Create .env.local
+- Copy environment variables from .env.example and replace with your own api keys
 
-Then, run the development server:
+### 2. Install
 
 ```bash
-npm run dev
-# or
+yarn install
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
